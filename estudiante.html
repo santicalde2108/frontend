@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Panel Estudiante</title>
+    <link rel="icon" href="LOGO transp.png" type="image/png" />
+    <link rel="stylesheet" href="estudiante.css">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <header class="main-header">
+        <nav class="navbar">
+            <div class="nav-left">
+                <a href="inicio.html" class="nav-logo">
+                    <img src="LOGO transp.png" class="logo">
+                </a>
+                <h1 class="site-title">ControlAssistant</h1>
+            </div>
+
+            <ul class="nav-right">
+                <li><a href="inicio.html" class="nav-link">Inicio</a></li>
+                <li><a href="nosotros.html" class="nav-link">Nosotros</a></li>
+                <li><a href="contacto.html" class="nav-link">Contacto</a></li>
+                <li><a href="#" id="logoutBtn" class="nav-link">Cerrar sesión</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- HERO -->
+    <section class="hero">
+        <h2 id="saludoUsuario"></h2>
+        <p>Este es tu panel de estudiante</p>
+    </section>
+
+    <!-- PANEL -->
+    <main class="features">
+
+        <div class="feature">
+            <i class="fa-solid fa-book"></i>
+            <h3>Mis Cursos</h3>
+            <p>Accede a tus cursos inscritos.</p>
+        </div>
+
+        <div class="feature">
+            <i class="fa-solid fa-pen-to-square"></i>
+            <h3>Mis Notas</h3>
+            <p>Consulta tus calificaciones.</p>
+        </div>
+
+        <div class="feature">
+            <i class="fa-solid fa-calendar-days"></i>
+            <h3>Horario</h3>
+            <p>Visualiza tus clases.</p>
+        </div>
+
+    </main>
+
+    <script src="auth.js"></script>
+</body>
+
+</html>

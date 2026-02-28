@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro</title>
+    <link rel="stylesheet" href="inicioYRegistro.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <header class="main-header">
+        <nav class="navbar">
+            <div class="nav-left">
+                <a href="inicio.html" class="nav-logo">
+                    <img src="LOGO transp.png" alt="Logo ControlAssistant" class="logo">
+                </a>
+                <h1 class="site-title">ControlAssistant</h1>
+            </div>
+
+            <ul class="nav-right">
+                <li><a href="inicio.html" class="nav-link active">Inicio</a></li>
+                <li><a href="nosotros.html" class="nav-link">Nosotros</a></li>
+                <li><a href="contacto.html" class="nav-link">Contacto</a></li>
+                <li id="itemLogin">
+                    <a href="inicioSesion.html" class="nav-link">Iniciar sesión</a>
+                </li>
+
+                <li id="saludo" class="nav-link" style="font-weight:600;"></li>
+
+                <li id="itemLogout" style="display:none;">
+                    <a href="#" class="nav-link" id="logoutBtn">Cerrar sesión</a>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="container register">
+
+        <div class="content">
+            <h2 class="text">Crear tu cuenta aquí</h2>
+            <h2 class="text">¡Es gratis y fácil!</h2>
+        </div>
+
+        <form class="formulario" id="registerForm">
+
+            <h3>Registro</h3>
+
+            <div class="input-box">
+                <input type="text" id="regNombre" placeholder="Nombre completo" required>
+            </div>
+
+            <div class="input-box">
+                <input type="email" id="regEmail" placeholder="Correo electrónico" required>
+            </div>
+
+            <div class="input-box">
+                <input type="password" id="regPassword" placeholder="Contraseña" required>
+            </div>
+
+            <div class="input-box">
+                <input type="password" id="regConfirm" placeholder="Confirmar contraseña" required>
+            </div>
+
+            <div class="input-box">
+                <select id="regRole" required>
+  <option value="estudiante">Estudiante</option>
+  <option value="profesor">Profesor</option>
+</select>
+            </div>
+
+            <button type="submit" class="btn">Registrarse</button>
+
+            <p class="texto">
+                ¿Ya tienes una cuenta?
+                <a href="inicioSesion.html">Inicia sesión aquí</a>
+            </p>
+
+        </form>
+
+    </main>
+
+    <script src="auth.js"></script>
+</body>
+
+</html>
