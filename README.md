@@ -42,7 +42,7 @@ ControlAssistant es un sistema web que permite a estudiantes y profesores accede
 
 2. **Abrir el proyecto:**
    - Navegar a la carpeta del proyecto.
-   - Abrir el archivo `inicio.html` en el navegador (doble clic o clic derecho → "Abrir con").
+   - Abrir el archivo `index.html` en el navegador (doble clic o clic derecho → "Abrir con").
 
 3. **Registrar un usuario:**
    - Ir a la página de **Registro** desde el botón "Registrarse".
@@ -67,22 +67,30 @@ ControlAssistant es un sistema web que permite a estudiantes y profesores accede
 
 ```
 ControlAssistant/
-├── inicio.html            → Página principal (landing page)
-├── inicio.css             → Estilos de la página principal
-├── nosotros.html          → Información del equipo
-├── nosotros.css           → Estilos de la página Nosotros
-├── contacto.html          → Formulario de contacto
-├── contacto.css           → Estilos de la página Contacto
-├── inicioSesion.html      → Formulario de inicio de sesión
-├── registro.html          → Formulario de registro
-├── inicioYRegistro.css    → Estilos compartidos de login y registro
-├── estudiante.html        → Panel del estudiante
-├── estudiante.css         → Estilos del panel estudiante
-├── profesor.html          → Panel del profesor
-├── profesor.css           → Estilos del panel profesor
-├── auth.js                → Lógica de autenticación (JavaScript)
-├── LOGO transp.png        → Logo del proyecto
-└── README.md              → Este archivo
+├── index.html                → Página principal (landing page)
+├── README.md                 → Este archivo
+│
+├── assets/
+│   └── LOGO transp.png      → Logo del proyecto
+│
+├── css/
+│   ├── inicio.css            → Estilos de la página principal
+│   ├── nosotros.css          → Estilos de Nosotros
+│   ├── contacto.css          → Estilos de Contacto
+│   ├── inicioYRegistro.css   → Estilos de login y registro
+│   ├── estudiante.css        → Estilos del panel estudiante
+│   └── profesor.css          → Estilos del panel profesor
+│
+├── js/
+│   └── auth.js               → Lógica de autenticación
+│
+└── pages/
+    ├── inicioSesion.html     → Inicio de sesión
+    ├── registro.html         → Registro de usuario
+    ├── nosotros.html         → Información del equipo
+    ├── contacto.html         → Formulario de contacto
+    ├── estudiante.html       → Panel del estudiante
+    └── profesor.html         → Panel del profesor
 ```
 
 ---

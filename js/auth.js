@@ -7,6 +7,17 @@
 const MAX_INTENTOS = 3;              // Máximo de intentos permitidos
 const TIEMPO_BLOQUEO = 5 * 60 * 1000; // 5 minutos en milisegundos
 
+// Detectar si estamos en la raíz o en la carpeta pages/
+// Esto permite que las redirecciones funcionen desde cualquier ubicación
+function obtenerRutaBase() {
+    var ruta = window.location.pathname;
+    if (ruta.indexOf("/pages/") !== -1) {
+        return ""; // Ya estamos en pages/, las rutas son relativas
+    } else {
+        return "pages/"; // Estamos en la raíz, necesitamos agregar pages/
+    }
+}
+
 // ===================== FUNCIONES =====================
 
 /**
@@ -182,9 +193,9 @@ function iniciarSesion(email, password, role) {
 
         // Condicional: redirigir según el rol
         if (usuario.role === "profesor") {
-            window.location.href = "profesor.html";
+            window.location.href = obtenerRutaBase() + "profesor.html";
         } else {
-            window.location.href = "estudiante.html";
+            window.location.href = obtenerRutaBase() + "estudiante.html";
         }
     } else {
         // Credenciales incorrectas: registrar intento fallido
@@ -199,7 +210,7 @@ function iniciarSesion(email, password, role) {
 function cerrarSesion() {
     console.log("Cerrando sesión...");
     localStorage.removeItem("usuarioActivo");
-    window.location.href = "inicioSesion.html";
+    window.location.href = obtenerRutaBase() + "inicioSesion.html";
 }
 
 /**
@@ -233,14 +244,14 @@ function configurarNavbar(usuario) {
         if (usuario.role === "profesor") {
             saludoNav.textContent = "Profesor";
             saludoNav.addEventListener("click", function () {
-                window.location.href = "profesor.html";
+                window.location.href = obtenerRutaBase() + "profesor.html";
             });
         }
 
         if (usuario.role === "estudiante") {
             saludoNav.textContent = "Estudiante";
             saludoNav.addEventListener("click", function () {
-                window.location.href = "estudiante.html";
+                window.location.href = obtenerRutaBase() + "estudiante.html";
             });
         }
 
@@ -267,7 +278,7 @@ if (registerForm) {
         var exitoso = registrarUsuario(nombre, email, password, confirmPassword, role);
 
         if (exitoso) {
-            window.location.href = "inicioSesion.html";
+            window.location.href = obtenerRutaBase() + "inicioSesion.html";
         }
     });
 }
@@ -293,7 +304,7 @@ var usuarioActivo = JSON.parse(localStorage.getItem("usuarioActivo"));
 
 if (document.body.classList.contains("privado") && !usuarioActivo) {
     console.log("Acceso denegado: usuario no autenticado. Redirigiendo al login.");
-    window.location.href = "inicioSesion.html";
+    window.location.href = obtenerRutaBase() + "inicioSesion.html";
 }
 
 // --- Mostrar saludo y configurar navbar ---

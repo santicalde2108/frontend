@@ -6,8 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Contacto - ControlAssistant</title>
 
-    <link rel="icon" href="LOGO transp.png" type="image/png" />
-    <link rel="stylesheet" href="contacto.css" />
+    <link rel="icon" href="../assets/LOGO transp.png" type="image/png" />
+    <link rel="stylesheet" href="../css/contacto.css" />
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 </head>
@@ -17,14 +17,14 @@
     <header class="main-header">
         <nav class="navbar">
             <div class="nav-left">
-                <a href="inicio.html" class="nav-logo">
-                    <img src="LOGO transp.png" alt="Logo ControlAssistant" class="logo">
+                <a href="../index.html" class="nav-logo">
+                    <img src="../assets/LOGO transp.png" alt="Logo ControlAssistant" class="logo">
                 </a>
                 <h1 class="site-title">ControlAssistant</h1>
             </div>
 
             <ul class="nav-right">
-                <li><a href="inicio.html" class="nav-link">Inicio</a></li>
+                <li><a href="../index.html" class="nav-link">Inicio</a></li>
                 <li><a href="nosotros.html" class="nav-link">Nosotros</a></li>
                 <li><a href="contacto.html" class="nav-link active">Contacto</a></li>
             </ul>
@@ -57,8 +57,8 @@
             <div id="mensajeExito" class="mensaje-exito">
                 <p>Tu mensaje ha sido enviado correctamente. ¡Gracias por contactarnos!</p>
                 <button id="nuevoMensajeBtn" class="btn btn-secundario">
-                Enviar otro mensaje
-            </button>
+                    Enviar otro mensaje
+                </button>
             </div>
 
         </div>
@@ -66,10 +66,14 @@
 
     <footer class="footer">
         <ul class="wrapper">
-            <li class="icon"><a href="https://www.facebook.com" target="_blank"><span class="tooltip">Facebook</span><i class="fab fa-facebook-f"></i></a></li>
-            <li class="icon"><a href="https://x.com" target="_blank"><span class="tooltip">Twitter</span><i class="fab fa-x-twitter"></i></a></li>
-            <li class="icon"><a href="https://instagram.com" target="_blank"><span class="tooltip">Instagram</span><i class="fab fa-instagram"></i></a></li>
-            <li class="icon"><a href="https://wa.me/573102145133" target="_blank"><span class="tooltip">WhatsApp</span><i class="fab fa-whatsapp"></i></a></li>
+            <li class="icon"><a href="https://www.facebook.com" target="_blank"><span class="tooltip">Facebook</span><i
+                        class="fab fa-facebook-f"></i></a></li>
+            <li class="icon"><a href="https://x.com" target="_blank"><span class="tooltip">Twitter</span><i
+                        class="fab fa-x-twitter"></i></a></li>
+            <li class="icon"><a href="https://instagram.com" target="_blank"><span class="tooltip">Instagram</span><i
+                        class="fab fa-instagram"></i></a></li>
+            <li class="icon"><a href="https://wa.me/573102145133" target="_blank"><span
+                        class="tooltip">WhatsApp</span><i class="fab fa-whatsapp"></i></a></li>
         </ul>
 
         <p class="footer-copy">
@@ -82,14 +86,14 @@
         const mensajeExito = document.getElementById("mensajeExito");
         const nuevoMensajeBtn = document.getElementById("nuevoMensajeBtn");
 
-        form.addEventListener("submit", function(event) {
+        form.addEventListener("submit", function (event) {
             event.preventDefault();
             form.classList.add("oculto");
             mensajeExito.classList.add("show");
             form.reset();
         });
 
-        nuevoMensajeBtn.addEventListener("click", function() {
+        nuevoMensajeBtn.addEventListener("click", function () {
             mensajeExito.classList.remove("show");
             form.classList.remove("oculto");
         });
