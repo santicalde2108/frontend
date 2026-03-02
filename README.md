@@ -1,10 +1,10 @@
-# 🎓 ControlAssistant
+# ControlAssistant
 
 **Sistema de Gestión Académica** — Plataforma web para la administración de notas y asistencia de una institución educativa.
 
 ---
 
-## 👥 Integrantes del Equipo
+## Integrantes del Equipo
 
 | Nombre | Rol | GitHub |
 |---|---|---|
@@ -15,7 +15,7 @@
 
 ---
 
-## 📋 Descripción del Proyecto
+## Descripción del Proyecto
 
 ControlAssistant es un sistema web que permite a estudiantes y profesores acceder a un entorno de gestión académica. La plataforma incluye:
 
@@ -26,7 +26,7 @@ ControlAssistant es un sistema web que permite a estudiantes y profesores accede
 
 ---
 
-## 🚀 Cómo Usar el Proyecto
+## Cómo Usar el Proyecto
 
 ### Requisitos
 
@@ -63,7 +63,7 @@ ControlAssistant es un sistema web que permite a estudiantes y profesores accede
 
 ---
 
-## 🗂️ Estructura de Archivos
+## Estructura de Archivos
 
 ```
 ControlAssistant/
@@ -95,7 +95,7 @@ ControlAssistant/
 
 ---
 
-## 💻 Tecnologías Utilizadas
+## Tecnologías Utilizadas
 
 - **HTML5** — Estructura de las páginas.
 - **CSS3** — Diseño visual y presentación.
@@ -106,7 +106,7 @@ ControlAssistant/
 
 ---
 
-## 📚 Contenidos Académicos Aplicados
+## Contenidos Académicos Aplicados
 
 El archivo `auth.js` demuestra el uso de:
 
