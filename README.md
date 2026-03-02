@@ -37,7 +37,7 @@ ControlAssistant es un sistema web que permite a estudiantes y profesores accede
 
 1. **Clonar el repositorio:**
    ```bash
-   git clone https://github.com/santicalde2108/ControlAssistant.git
+   git clone https://github.com/santicalde2108/frontend.git
    ```
 
 2. **Abrir el proyecto:**
@@ -71,7 +71,7 @@ ControlAssistant/
 ├── README.md                 → Este archivo
 │
 ├── assets/
-│   └── LOGO transp.png      → Logo del proyecto
+│   └── logo-transp.png      → Logo del proyecto
 │
 ├── css/
 │   ├── inicio.css            → Estilos de la página principal
