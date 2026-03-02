@@ -56,7 +56,7 @@ body {
 }
 
 .logo {
-    width: 75px;
+    width: 80px;
     transition: transform 0.3s ease;
     filter: invert(38%) sepia(18%) saturate(900%) hue-rotate(205deg);
 }

@@ -52,7 +52,7 @@ body {
 }
 
 .logo {
-    width: 75px;
+    width: 80px;
     transition: transform 0.3s ease;
     filter: invert(38%) sepia(18%) saturate(900%) hue-rotate(205deg);
 }
@@ -65,7 +65,6 @@ body {
     color: #5b6b9a;
     font-size: 1.8rem;
     font-weight: 700;
-    letter-spacing: 1px;
 }
 
 .nav-right {
