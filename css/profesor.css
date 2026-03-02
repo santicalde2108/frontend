@@ -158,3 +158,17 @@ body {
     color: #6b7280;
     font-size: 1rem;
 }
+
+/* ===== RESPONSIVE ===== */
+
+@media (max-width: 768px) {
+    /* Navbar centrado */
+    .navbar {
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 1.5rem 1rem;
+        gap: 1rem;
+    }
+}
