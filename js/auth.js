@@ -1,7 +1,6 @@
-// ============================================================
+
 //  auth.js – Lógica de autenticación de ControlAssistant
-//  Contenidos aplicados: Variables, Condicionales, Ciclos, Funciones
-// ============================================================
+//  Contenidos aplicados: Variables, Condicionales, Ciclos, Funciones.
 
 // ===================== CONSTANTES =====================
 const MAX_INTENTOS = 3;              // Máximo de intentos permitidos
@@ -259,9 +258,9 @@ function configurarNavbar(usuario) {
     }
 }
 
-// ===================== EVENTOS DEL DOM =====================
+//EVENTOS DEL DOM
 
-// --- Formulario de Registro ---
+// Formulario de Registro
 var registerForm = document.getElementById("registerForm");
 
 if (registerForm) {
@@ -283,7 +282,7 @@ if (registerForm) {
     });
 }
 
-// --- Formulario de Login ---
+//Formulario de Login
 var loginForm = document.getElementById("loginForm");
 
 if (loginForm) {
@@ -299,7 +298,7 @@ if (loginForm) {
     });
 }
 
-// --- Proteger páginas privadas ---
+//Proteger páginas privadas
 var usuarioActivo = JSON.parse(localStorage.getItem("usuarioActivo"));
 
 if (document.body.classList.contains("privado") && !usuarioActivo) {
@@ -311,7 +310,7 @@ if (document.body.classList.contains("privado") && !usuarioActivo) {
 mostrarSaludo(usuarioActivo);
 configurarNavbar(usuarioActivo);
 
-// --- Botón cerrar sesión (navbar) ---
+// Botón cerrar sesión (navbar)
 var logoutBtn = document.getElementById("logoutBtn");
 
 if (logoutBtn) {
@@ -320,7 +319,7 @@ if (logoutBtn) {
     });
 }
 
-// --- Botón cerrar sesión (paneles) ---
+// Botón cerrar sesión (paneles)
 var btnCerrar = document.getElementById("cerrarSesion");
 
 if (btnCerrar) {
