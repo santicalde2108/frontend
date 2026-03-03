@@ -70,7 +70,7 @@ ControlAssistant/
 ├── index.html                → Página principal (landing page)
 ├── README.md                 → Este archivo
 │
-├── assets/
+├── imagenes/
 │   └── logo-transp.png      → Logo del proyecto
 │
 ├── css/
@@ -84,7 +84,7 @@ ControlAssistant/
 ├── js/
 │   └── auth.js               → Lógica de autenticación
 │
-└── pages/
+└── html/
     ├── inicioSesion.html     → Inicio de sesión
     ├── registro.html         → Registro de usuario
     ├── nosotros.html         → Información del equipo
@@ -119,6 +119,6 @@ El archivo `auth.js` demuestra el uso de:
 
 ---
 
-## 📄 Licencia
+## Licencia
 
 Proyecto académico desarrollado para el curso de FrontEnd 1 — CESDE, 2025.
