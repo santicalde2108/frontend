@@ -68,10 +68,19 @@ ControlAssistant es un sistema web que permite a estudiantes y profesores accede
 ```
 ControlAssistant/
 ├── index.html                → Página principal (landing page)
-├── README.md                 → Este archivo
+├── README.md                 → Documentación del proyecto
+│
+├── mockups/                  → Diseños visuales del sistema (vistas en PNG)
+│   ├── 01-index.png          → Mockup de la página principal
+│   ├── 02-nosotros.png       → Mockup de la sección Nosotros
+│   ├── 03-contacto.png       → Mockup de la página de Contacto
+│   ├── 04-inicioSesion.png   → Mockup del inicio de sesión
+│   ├── 05-registro.png       → Mockup del registro de usuario
+│   ├── 06-estudiante.png     → Mockup del panel del estudiante
+│   └── 07-profesor.png       → Mockup del panel del profesor
 │
 ├── imagenes/
-│   └── logo-transp.png      → Logo del proyecto
+│   └── logo-transp.png       → Logo oficial del proyecto
 │
 ├── css/
 │   ├── inicio.css            → Estilos de la página principal
@@ -82,11 +91,11 @@ ControlAssistant/
 │   └── profesor.css          → Estilos del panel profesor
 │
 ├── js/
-│   └── auth.js               → Lógica de autenticación
+│   └── auth.js               → Lógica de autenticación y control de acceso
 │
 └── html/
-    ├── inicioSesion.html     → Inicio de sesión
-    ├── registro.html         → Registro de usuario
+    ├── inicioSesion.html     → Vista de inicio de sesión
+    ├── registro.html         → Vista de registro
     ├── nosotros.html         → Información del equipo
     ├── contacto.html         → Formulario de contacto
     ├── estudiante.html       → Panel del estudiante
