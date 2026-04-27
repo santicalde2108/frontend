@@ -1,3 +1,7 @@
+const MAX_INTENTOS = 3;
+// ===================== USUARIO TEMPORAL =====================
+let usuarioRegistrado = null;
+let intentos = 0;
 
 // ===================== REGISTRO =====================
 function registrarUsuario(nombre, email, password, confirmPassword, role) {
