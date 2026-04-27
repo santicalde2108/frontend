@@ -6,7 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro</title>
 
-    <link rel="stylesheet" href="inicioYRegistro.css">
+    <link rel="icon" href="../imagenes/logo-transp.png" type="image/png" />
+    <link rel="stylesheet" href="../css/inicioYRegistro.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
     <script src="auth.js" defer></script>
@@ -86,25 +87,7 @@
 
 </main>
 
-<script>
-    let registerForm = document.getElementById("registerForm");
-
-    registerForm.onsubmit = function (e) {
-        e.preventDefault();
-
-        let nombre = document.getElementById("regNombre").value;
-        let email = document.getElementById("regEmail").value;
-        let password = document.getElementById("regPassword").value;
-        let confirm = document.getElementById("regConfirm").value;
-        let role = document.getElementById("regRole").value;
-
-        let ok = registrarUsuario(nombre, email, password, confirm, role);
-
-        if (ok) {
-            window.location.href = "inicioSesion.html";
-        }
-    };
-</script>
+<script src="../js/auth.js"></script>
 
 </body>
 </html>
