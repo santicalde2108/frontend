@@ -1,6 +1,6 @@
 const MAX_INTENTOS = 3;
 // ===================== USUARIO TEMPORAL =====================
-let usuarioRegistrado = null;
+
 let intentos = 0;
 
 // ===================== REGISTRO =====================
@@ -11,17 +11,19 @@ function registrarUsuario(nombre, email, password, confirmPassword, role) {
         return false;
     }
 
-    if (usuarioRegistrado !== null && usuarioRegistrado.email === email) {
+    let usuarioExistente = JSON.parse(localStorage.getItem("usuarioRegistrado"));
+
+    if (usuarioExistente !== null && usuarioExistente.email === email) {
         alert("Usuario ya existe");
         return false;
     }
 
-    usuarioRegistrado = {
-        nombre: nombre,
-        email: email,
-        password: password,
-        role: role
-    };
+localStorage.setItem("usuarioRegistrado", JSON.stringify({
+    nombre: nombre,
+    email: email,
+    password: password,
+    role: role
+}));
 
     alert("Registro exitoso");
     return true;
@@ -29,6 +31,8 @@ function registrarUsuario(nombre, email, password, confirmPassword, role) {
 
 // ===================== LOGIN =====================
 function iniciarSesion(email, password, role) {
+
+    let usuarioRegistrado = JSON.parse(localStorage.getItem("usuarioRegistrado"));
 
     if (usuarioRegistrado === null) {
         alert("No hay usuarios registrados");
@@ -73,6 +77,7 @@ function obtenerRutaBase() {
 
 // ===================== SESIÓN =====================
 function cerrarSesion() {
+    localStorage.removeItem("usuarioRegistrado");
     alert("Sesión cerrada");
     window.location.href = obtenerRutaBase() + "inicioSesion.html";
 }
