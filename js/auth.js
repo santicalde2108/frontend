@@ -59,3 +59,20 @@ function iniciarSesion(email, password, role) {
         alert("Datos incorrectos. Intento " + intentos + " de " + MAX_INTENTOS);
     }
 }
+
+// ===================== RUTA =====================
+function obtenerRutaBase() {
+    let ruta = window.location.pathname;
+
+    if (ruta.indexOf("/html/") !== -1) {
+        return "";
+    } else {
+        return "html/";
+    }
+}
+
+// ===================== SESIÓN =====================
+function cerrarSesion() {
+    alert("Sesión cerrada");
+    window.location.href = obtenerRutaBase() + "inicioSesion.html";
+}
