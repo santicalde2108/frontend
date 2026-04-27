@@ -5,83 +5,106 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro</title>
-    <link rel="stylesheet" href="../css/inicioYRegistro.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="inicioYRegistro.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <script src="auth.js" defer></script>
 </head>
 
 <body>
 
-    <header class="main-header">
-        <nav class="navbar">
-            <div class="nav-left">
-                <a href="../index.html" class="nav-logo">
-                    <img src="../imagenes/logo-transp.png" alt="Logo ControlAssistant" class="logo">
-                </a>
-                <h1 class="site-title">ControlAssistant</h1>
-            </div>
+<header class="main-header">
+    <nav class="navbar">
 
-            <ul class="nav-right">
-                <li><a href="../index.html" class="nav-link active">Inicio</a></li>
-                <li><a href="nosotros.html" class="nav-link">Nosotros</a></li>
-                <li><a href="contacto.html" class="nav-link">Contacto</a></li>
-                <li id="itemLogin">
-                    <a href="inicioSesion.html" class="nav-link">Iniciar sesión</a>
-                </li>
-
-                <li id="itemLogout" style="display:none;">
-                    <a href="#" class="nav-link" id="logoutBtn">Cerrar sesión</a>
-                </li>
-            </ul>
-        </nav>
-    </header>
-
-    <main class="container register">
-
-        <div class="content">
-            <h2 class="text">Crear tu cuenta aquí</h2>
-            <h2 class="text">¡Es gratis y fácil!</h2>
+        <div class="nav-left">
+            <a href="../index.html" class="nav-logo">
+                <img src="../imagenes/logo-transp.png" class="logo">
+            </a>
+            <h1 class="site-title">ControlAssistant</h1>
         </div>
 
-        <form class="formulario" id="registerForm">
+        <ul class="nav-right">
+            <li><a href="../index.html">Inicio</a></li>
+            <li><a href="nosotros.html">Nosotros</a></li>
+            <li><a href="contacto.html">Contacto</a></li>
 
-            <h3>Registro</h3>
+            <li id="itemLogin">
+                <a href="inicioSesion.html">Iniciar sesión</a>
+            </li>
 
-            <div class="input-box">
-                <input type="text" id="regNombre" placeholder="Nombre completo" required>
-            </div>
+            <li id="itemLogout" style="display:none;">
+                <a href="#" id="logoutBtn">Cerrar sesión</a>
+            </li>
+        </ul>
 
-            <div class="input-box">
-                <input type="email" id="regEmail" placeholder="Correo electrónico" required>
-            </div>
+    </nav>
+</header>
 
-            <div class="input-box">
-                <input type="password" id="regPassword" placeholder="Contraseña" required>
-            </div>
+<main class="container register">
 
-            <div class="input-box">
-                <input type="password" id="regConfirm" placeholder="Confirmar contraseña" required>
-            </div>
+    <div class="content">
+        <h2>Crear cuenta nueva</h2>
+        <h2>¡Es gratis!</h2>
+    </div>
 
-            <div class="input-box">
-                <select id="regRole" required>
-                    <option value="estudiante">Estudiante</option>
-                    <option value="profesor">Profesor</option>
-                </select>
-            </div>
+    <form id="registerForm" class="formulario">
 
-            <button type="submit" class="btn">Registrarse</button>
+        <h3>Registro</h3>
 
-            <p class="texto">
-                ¿Ya tienes una cuenta?
-                <a href="inicioSesion.html">Inicia sesión aquí</a>
-            </p>
+        <div class="input-box">
+            <input type="text" id="regNombre" placeholder="Nombre completo" required>
+        </div>
 
-        </form>
+        <div class="input-box">
+            <input type="email" id="regEmail" placeholder="Correo electrónico" required>
+        </div>
 
-    </main>
+        <div class="input-box">
+            <input type="password" id="regPassword" placeholder="Contraseña" required>
+        </div>
 
-    <script src="../js/auth.js"></script>
+        <div class="input-box">
+            <input type="password" id="regConfirm" placeholder="Confirmar contraseña" required>
+        </div>
+
+        <div class="input-box">
+            <select id="regRole" required>
+                <option value="estudiante">Estudiante</option>
+                <option value="profesor">Profesor</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn">Registrarse</button>
+
+        <p class="texto">
+            ¿Ya tienes cuenta?
+            <a href="inicioSesion.html">Inicia sesión</a>
+        </p>
+
+    </form>
+
+</main>
+
+<script>
+    let registerForm = document.getElementById("registerForm");
+
+    registerForm.onsubmit = function (e) {
+        e.preventDefault();
+
+        let nombre = document.getElementById("regNombre").value;
+        let email = document.getElementById("regEmail").value;
+        let password = document.getElementById("regPassword").value;
+        let confirm = document.getElementById("regConfirm").value;
+        let role = document.getElementById("regRole").value;
+
+        let ok = registrarUsuario(nombre, email, password, confirm, role);
+
+        if (ok) {
+            window.location.href = "inicioSesion.html";
+        }
+    };
+</script>
+
 </body>
-
 </html>

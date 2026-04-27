@@ -5,92 +5,92 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Iniciar Sesión</title>
-    <link rel="stylesheet" href="../css/inicioYRegistro.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="inicioYRegistro.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <script src="auth.js" defer></script>
 </head>
 
 <body>
 
-    <header class="main-header">
-        <nav class="navbar">
-            <div class="nav-left">
-                <a href="../index.html" class="nav-logo">
-                    <img src="../imagenes/logo-transp.png" alt="Logo ControlAssistant" class="logo">
-                </a>
-                <h1 class="site-title">ControlAssistant</h1>
-            </div>
+<header class="main-header">
+    <nav class="navbar">
 
-            <ul class="nav-right">
-                <li><a href="../index.html" class="nav-link">Inicio</a></li>
-                <li><a href="nosotros.html" class="nav-link">Nosotros</a></li>
-                <li><a href="contacto.html" class="nav-link">Contacto</a></li>
-                <li id="itemLogin">
-                    <a href="inicioSesion.html" class="nav-link active">Iniciar sesión</a>
-                </li>
-
-                <li id="itemLogout" style="display:none;">
-                    <a href="#" class="nav-link" id="logoutBtn">Cerrar sesión</a>
-                </li>
-            </ul>
-        </nav>
-    </header>
-
-    <main class="container">
-
-        <div class="content">
-            <h2 class="text">¡Bienvenido a</h2>
-            <h2 class="text">ControlAssistant!</h2>
-            <h2 id="saludoUsuario"></h2>
+        <div class="nav-left">
+            <a href="../index.html" class="nav-logo">
+                <img src="../imagenes/logo-transp.png" class="logo">
+            </a>
+            <h1 class="site-title">ControlAssistant</h1>
         </div>
 
-        <form class="formulario" id="loginForm">
+        <ul class="nav-right">
+            <li><a href="../index.html">Inicio</a></li>
+            <li><a href="nosotros.html">Nosotros</a></li>
+            <li><a href="contacto.html">Contacto</a></li>
 
-            <h3>Iniciar Sesión</h3>
+            <li id="itemLogin">
+                <a href="inicioSesion.html" class="active">Iniciar sesión</a>
+            </li>
 
-            <div class="input-box">
-                <input type="email" id="loginEmail" placeholder="Correo electrónico" required>
-            </div>
+            <li id="itemLogout" style="display:none;">
+                <a href="#" id="logoutBtn">Cerrar sesión</a>
+            </li>
+        </ul>
 
-            <div class="input-box" style="position: relative;">
-                <input type="password" id="loginPassword" placeholder="Contraseña" required>
+    </nav>
+</header>
 
-            </div>
+<main class="container">
 
-            <div class="input-box">
-                <select id="loginRole" required>
-                    <option value="estudiante">Estudiante</option>
-                    <option value="profesor">Profesor</option>
-                </select>
-            </div>
+    <div class="content">
+        <h2>¡Bienvenido a ControlAssistant!</h2>
+        <h2 id="saludoUsuario"></h2>
+    </div>
 
-            <button type="submit" class="btn">Iniciar Sesión</button>
+    <form id="loginForm" class="formulario">
 
-            <p class="texto">
-                ¿No tienes una cuenta?
-                <a href="registro.html">Crea una aquí</a>
-            </p>
+        <h3>Iniciar Sesión</h3>
 
-        </form>
+        <div class="input-box">
+            <input type="email" id="loginEmail" placeholder="Correo electrónico" required>
+        </div>
 
-    </main>
+        <div class="input-box">
+            <input type="password" id="loginPassword" placeholder="Contraseña" required>
+        </div>
 
-    <script src="../js/auth.js"></script>
+        <div class="input-box">
+            <select id="loginRole" required>
+                <option value="estudiante">Estudiante</option>
+                <option value="profesor">Profesor</option>
+            </select>
+        </div>
 
-    <script>
-        function togglePassword(id, icon) {
-            const input = document.getElementById(id);
+        <button type="submit" class="btn">Iniciar Sesión</button>
 
-            if (input.type === "password") {
-                input.type = "text";
-                icon.classList.replace("fa-eye", "fa-eye-slash");
-            } else {
-                input.type = "password";
-                icon.classList.replace("fa-eye-slash", "fa-eye");
-            }
-        }
-    </script>
+        <p class="texto">
+            ¿No tienes cuenta?
+            <a href="registro.html">Crear cuenta</a>
+        </p>
+
+    </form>
+
+</main>
+
+<script>
+    let loginForm = document.getElementById("loginForm");
+
+    loginForm.onsubmit = function (e) {
+        e.preventDefault();
+
+        let email = document.getElementById("loginEmail").value;
+        let password = document.getElementById("loginPassword").value;
+        let role = document.getElementById("loginRole").value;
+
+        iniciarSesion(email, password, role);
+    };
+</script>
 
 </body>
-
 </html>
