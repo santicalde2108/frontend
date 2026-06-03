@@ -1,145 +1,221 @@
 const MAX_INTENTOS = 3;
 let intentos = 0;
+const RUTA_JSON = "usuarios.json";
 
-const USUARIOS_JSON = [
-    { "nombre": "Jose Cardona",   "email": "jose.cardona@email.com",   "password": "1234", "role": "profesor" },
-    { "nombre": "Juan Montoya",  "email": "juan.montoya@email.com",  "password": "1234", "role": "estudiante" },
-    { "nombre": "Santiago Calderon", "email": "santiago.calderon@email.com", "password": "1234", "role": "estudiante" },
-    { "nombre": "Tatiana Suarez",  "email": "tatiana.suarez@email.com",  "password": "1234", "role": "estudiante" }
-];
+/* ==========================
+   OBTENER USUARIOS
+========================== */
+async function obtenerUsuariosAsync() {
+    const respuesta = await fetch(RUTA_JSON);
 
+    if (!respuesta.ok) {
+        throw new Error("No se pudo cargar el archivo de usuarios");
+    }
+
+    return await respuesta.json();
+}
+
+/* ==========================
+   REGISTRAR USUARIO
+========================== */
 function registrarUsuario(nombre, email, password, confirmPassword, rol) {
+
+    if (!nombre || !email || !password || !confirmPassword || !rol) {
+        alert("Todos los campos son obligatorios");
+        return false;
+    }
+
     if (password !== confirmPassword) {
         alert("Las contraseñas no coinciden");
         return false;
     }
 
-    let existe = JSON.parse(localStorage.getItem("usuarioRegistrado"));
+    const usuarioExistente = JSON.parse(
+        localStorage.getItem("usuarioRegistrado")
+    );
 
-    if (existe && existe.email === email) {
+    if (usuarioExistente && usuarioExistente.email === email) {
         alert("Este correo ya está registrado");
         return false;
     }
 
+    const nuevoUsuario = {
+        nombre,
+        email,
+        password,
+        role: rol
+    };
+
     localStorage.setItem(
         "usuarioRegistrado",
-        JSON.stringify({ nombre, email, password, role: rol })
+        JSON.stringify(nuevoUsuario)
     );
 
     alert("Registro exitoso");
     return true;
 }
 
+/* ==========================
+   INICIAR SESIÓN
+========================== */
 async function iniciarSesion(email, password, rol) {
+
     if (intentos >= MAX_INTENTOS) {
         alert("Demasiados intentos. Usuario bloqueado.");
         return;
     }
 
     try {
-        let usuarios = [...USUARIOS_JSON];
 
-        let usuarioRegistrado = JSON.parse(localStorage.getItem("usuarioRegistrado"));
-        if (usuarioRegistrado) {
-            usuarios.push(usuarioRegistrado);
-        }
+        const usuarios = await obtenerUsuariosAsync();
 
-        let usuario = usuarios.find(u =>
-            u.email === email &&
-            u.password === password &&
-            u.role === rol
+        const usuario = usuarios.find(
+            u =>
+                u.email === email &&
+                u.password === password &&
+                u.role === rol
         );
 
         if (usuario) {
+
             intentos = 0;
-            localStorage.setItem("usuarioActivo", JSON.stringify(usuario));
-            alert("Bienvenido " + usuario.nombre);
-            window.location.href = "index.html";
+
+            localStorage.setItem(
+                "usuarioActivo",
+                JSON.stringify(usuario)
+            );
+
+            alert(`Bienvenido ${usuario.nombre}`);
+
+            if (usuario.role === "profesor") {
+                window.location.href = "profesor.html";
+            } else if (usuario.role === "estudiante") {
+                window.location.href = "estudiante.html";
+            } else {
+                alert("Rol no válido");
+            }
+
         } else {
+
             intentos++;
-            alert("Datos incorrectos. Intento " + intentos + " de " + MAX_INTENTOS);
+
+            alert(
+                `Datos incorrectos. Intento ${intentos} de ${MAX_INTENTOS}`
+            );
+
         }
+
     } catch (error) {
-        console.error(error);
-        alert("Error al cargar usuarios");
+
+        console.error("Error:", error);
+        alert("Error al cargar los usuarios");
+
     }
 }
 
+/* ==========================
+   CERRAR SESIÓN
+========================== */
 function cerrarSesion() {
+
     localStorage.removeItem("usuarioActivo");
-    alert("Sesión cerrada");
+
+    alert("Sesión cerrada correctamente");
+
     window.location.href = "inicioSesion.html";
 }
 
-function mostrarUsuarios(lista) {
-    let contenedor = document.getElementById("listaUsuarios");
+/* ==========================
+   MOSTRAR USUARIOS
+========================== */
+function mostrarUsuarios(usuarios) {
+
+    const contenedor = document.getElementById("listaUsuarios");
+
     if (!contenedor) return;
 
-    let html = "<div class='card'><h3>Usuarios del sistema</h3><ul>";
+    contenedor.innerHTML = "";
 
-    lista.forEach(u => {
-        html += `<li><strong>${u.nombre}</strong> — ${u.email} (${u.role})</li>`;
+    usuarios.forEach(usuario => {
+
+        contenedor.innerHTML += `
+            <tr>
+                <td>${usuario.nombre}</td>
+                <td>${usuario.email}</td>
+                <td>${usuario.role}</td>
+            </tr>
+        `;
+
     });
-
-    html += "</ul><p><strong>Total:</strong> " + lista.length + " usuarios</p></div>";
-    contenedor.innerHTML = html;
 }
 
-function iniciarCargaUsuarios() {
-    let contenedor = document.getElementById("listaUsuarios");
+/* ==========================
+   CARGAR USUARIOS
+========================== */
+async function iniciarCargaUsuarios() {
+
+    const contenedor = document.getElementById("listaUsuarios");
+
     if (!contenedor) return;
 
-    contenedor.innerHTML = "<p>Cargando usuarios...</p>";
+    try {
 
-    let usuarios = [...USUARIOS_JSON];
+        const usuarios = await obtenerUsuariosAsync();
 
-    let usuarioRegistrado = JSON.parse(localStorage.getItem("usuarioRegistrado"));
-    if (usuarioRegistrado) {
-        usuarios.push(usuarioRegistrado);
+        mostrarUsuarios(usuarios);
+
+        localStorage.setItem(
+            "datosPlataforma",
+            JSON.stringify(usuarios)
+        );
+
+    } catch (error) {
+
+        console.error("Error al cargar usuarios:", error);
+
     }
-
-    mostrarUsuarios(usuarios);
-    localStorage.setItem("datosPlataforma", JSON.stringify(usuarios));
 }
 
-document.addEventListener("DOMContentLoaded", function () {
+/* ==========================
+   EVENTOS DEL DOM
+========================== */
+document.addEventListener("DOMContentLoaded", () => {
 
-    let loginForm = document.getElementById("loginForm");
+    // Login
+    const loginForm = document.getElementById("loginForm");
 
     if (loginForm) {
-        loginForm.onsubmit = async function (e) {
-            e.preventDefault();
-            await iniciarSesion(
-                document.getElementById("loginEmail").value,
-                document.getElementById("loginPassword").value,
-                document.getElementById("loginRole").value
-            );
-        };
-    }
 
-    let registerForm = document.getElementById("registerForm");
+        loginForm.addEventListener("submit", async (e) => {
 
-    if (registerForm) {
-        registerForm.onsubmit = function (e) {
             e.preventDefault();
 
-            if (registrarUsuario(
-                document.getElementById("regNombre").value,
-                document.getElementById("regEmail").value,
-                document.getElementById("regPassword").value,
-                document.getElementById("regConfirm").value,
-                document.getElementById("regRole").value
-            )) {
-                window.location.href = "inicioSesion.html";
-            }
-        };
+            const email = document.getElementById("loginEmail").value.trim();
+            const password = document.getElementById("loginPassword").value;
+            const rol = document.getElementById("loginRole").value;
+
+            await iniciarSesion(email, password, rol);
+
+        });
+
     }
 
-    let logoutBtn = document.getElementById("logoutBtn");
+    // Botón cerrar sesión
+    const logoutBtn = document.getElementById("logoutBtn");
 
     if (logoutBtn) {
-        logoutBtn.onclick = cerrarSesion;
+
+        logoutBtn.addEventListener("click", (e) => {
+
+            e.preventDefault();
+
+            cerrarSesion();
+
+        });
+
     }
 
+    // Cargar usuarios si existe la tabla
     iniciarCargaUsuarios();
+
 });
