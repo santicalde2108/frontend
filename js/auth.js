@@ -1,9 +1,12 @@
 const MAX_INTENTOS = 3;
-let intentos = 0;
 const RUTA_JSON = "/js/usuarios.json";
 const BLOQUEO_MS = 5 * 60 * 1000;
 const STORAGE_USUARIOS = "usuarios";
 const STORAGE_USUARIO_ACTIVO = "usuarioActivo";
+
+// Nota: usuarios.json solo contiene datos de ejemplo/semente.
+// Las cuentas nuevas y cambios de usuario se guardan en localStorage,
+// porque un archivo JSON estático no se puede escribir desde el frontend.
 
 async function registrarUsuario(nombre, email, password, confirmPassword, rol) {
     if (password !== confirmPassword) {
@@ -52,8 +55,7 @@ async function iniciarSesion(email, password, rol) {
             
             localStorage.removeItem(intentosKey);
             localStorage.removeItem(bloqueadoKey);
-            intentos = 0;
-            localStorage.setItem("usuarioActivo", JSON.stringify(usuario));
+            localStorage.setItem(STORAGE_USUARIO_ACTIVO, JSON.stringify(usuario));
             alert("Bienvenido " + usuario.nombre);
             if (usuario.role === "estudiante") {
                 window.location.href = "/html/estudiante.html";
@@ -116,65 +118,6 @@ function renderSaludoUsuario() {
     }
 }
 
-function renderUsuarioPerfil() {
-    const usuario = getUsuarioActivo();
-    const perfil = document.getElementById("userProfileInfo");
-    if (perfil && usuario) {
-        perfil.innerHTML = `
-            <strong>Nombre:</strong> ${usuario.nombre}<br>
-            <strong>Correo:</strong> ${usuario.email}<br>
-            <strong>Rol:</strong> ${usuario.role}
-        `;
-    }
-}
-
-function guardarUsuariosLocalStorage(usuarios) {
-    localStorage.setItem(STORAGE_USUARIOS, JSON.stringify(usuarios));
-}
-
-function actualizarUsuarioActivo(nuevoNombre, nuevaPassword) {
-    const usuario = getUsuarioActivo();
-    if (!usuario) return false;
-
-    let usuarios = JSON.parse(localStorage.getItem(STORAGE_USUARIOS) || "[]");
-    usuarios = usuarios.map(u => {
-        if (u.email === usuario.email) {
-            return {
-                ...u,
-                nombre: nuevoNombre || u.nombre,
-                password: nuevaPassword || u.password
-            };
-        }
-        return u;
-    });
-
-    guardarUsuariosLocalStorage(usuarios);
-
-    const usuarioActualizado = { ...usuario, nombre: nuevoNombre || usuario.nombre };
-    if (nuevaPassword) {
-        usuarioActualizado.password = nuevaPassword;
-    }
-    localStorage.setItem(STORAGE_USUARIO_ACTIVO, JSON.stringify(usuarioActualizado));
-
-    renderSaludoUsuario();
-    renderUsuarioPerfil();
-    alert("Perfil actualizado con éxito.");
-    return true;
-}
-
-function eliminarUsuarioActivo() {
-    const usuario = getUsuarioActivo();
-    if (!usuario) return;
-
-    let usuarios = JSON.parse(localStorage.getItem(STORAGE_USUARIOS) || "[]");
-    usuarios = usuarios.filter(u => u.email !== usuario.email);
-    guardarUsuariosLocalStorage(usuarios);
-
-    localStorage.removeItem(STORAGE_USUARIO_ACTIVO);
-    alert("Cuenta eliminada. Serás redirigido al inicio de sesión.");
-    window.location.href = "/html/inicioSesion.html";
-}
-
 function mostrarUsuarios(lista) {
     let contenedor = document.getElementById("listaUsuarios");
     if (!contenedor) return;
@@ -196,7 +139,6 @@ async function iniciarCargaUsuarios() {
      try {
         let datos = await obtenerUsuariosAsync();
         mostrarUsuarios(datos);
-        localStorage.setItem("datosPlataforma", JSON.stringify(datos));
     }
     catch (error) {
         console.error(error);
@@ -240,26 +182,6 @@ document.addEventListener("DOMContentLoaded", function () {
         logoutBtn.onclick = cerrarSesion;
     }
 
-    let editProfileBtn = document.getElementById("editProfileBtn");
-    if (editProfileBtn) {
-        editProfileBtn.onclick = function () {
-            const nuevoNombre = prompt("Nuevo nombre:", getUsuarioActivo()?.nombre || "");
-            if (!nuevoNombre) return;
-            const nuevaPassword = prompt("Nueva contraseña (dejar vacío para mantener la actual):", "");
-            actualizarUsuarioActivo(nuevoNombre, nuevaPassword);
-        };
-    }
-
-    let deleteAccountBtn = document.getElementById("deleteAccountBtn");
-    if (deleteAccountBtn) {
-        deleteAccountBtn.onclick = function () {
-            if (confirm("¿Seguro que quieres eliminar tu cuenta? Esta acción no se puede deshacer.")) {
-                eliminarUsuarioActivo();
-            }
-        };
-    }
-
     renderSaludoUsuario();
-    renderUsuarioPerfil();
     iniciarCargaUsuarios();
 });
