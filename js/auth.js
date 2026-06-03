@@ -1,167 +1,88 @@
 const MAX_INTENTOS = 3;
-// ===================== USUARIO TEMPORAL =====================
-
 let intentos = 0;
+const RUTA_JSON = "./js/usuarios.json";
 
-let usuarios = [];
-
-fetch("../json/usuarios.json")
-    .then(response => response.json())
-    .then(data => {
-        usuarios = data;
-
-        console.log("Usuarios cargados:", usuarios);
-
-        mostrarUsuarios();
-    })
-    .catch(error => {
-        console.error("Error al cargar usuarios:", error);
-    });
-
-function mostrarUsuarios() {
-
-    let lista = document.getElementById("listaUsuarios");
-
-    if (!lista) {
-        return;
-    }
-
-    lista.innerHTML = "";
-
-    usuarios.forEach(function(usuario) {
-
-        lista.innerHTML += `
-            <div>
-                <h4>${usuario.nombre}</h4>
-                <p>${usuario.email}</p>
-                <p>${usuario.role}</p>
-            </div>
-        `;
-
-    });
-}
-// ===================== REGISTRO =====================
-function registrarUsuario(nombre, email, password, confirmPassword, role) {
-
+function registrarUsuario(nombre, email, password, confirmPassword, rol) {
     if (password !== confirmPassword) {
         alert("Las contraseñas no coinciden");
         return false;
     }
 
-    let usuarioExistente = JSON.parse(localStorage.getItem("usuarioRegistrado"));
+    let existe = JSON.parse(localStorage.getItem("usuarioRegistrado"));
 
-    if (usuarioExistente !== null && usuarioExistente.email === email) {
-        alert("Usuario ya existe");
+    if (existe && existe.email === email) {
+        alert("Este correo ya está registrado");
         return false;
     }
 
-    localStorage.setItem("usuarioRegistrado", JSON.stringify({
-        nombre: nombre,
-        email: email,
-        password: password,
-        role: role
-    }));
+    localStorage.setItem(
+        "usuarioRegistrado",
+        JSON.stringify({ nombre, email, password, role: rol })
+    );
 
-    alert("Registro exitoso");
+alert("Registro exitoso");
     return true;
 }
 
-// ===================== LOGIN =====================
-function iniciarSesion(email, password, role) {
-
-    let usuarioRegistrado = JSON.parse(localStorage.getItem("usuarioRegistrado"));
-
-    if (usuarioRegistrado === null) {
-        alert("No hay usuarios registrados");
-        return;
-    }
-
+async function iniciarSesion(email, password, rol) {
     if (intentos >= MAX_INTENTOS) {
-        alert("Usuario bloqueado");
+        alert("Demasiados intentos. Usuario bloqueado.");
         return;
     }
 
-    if (
-        usuarioRegistrado.email === email &&
-        usuarioRegistrado.password === password &&
-        usuarioRegistrado.role === role
-    ) {
+    try {
+        let usuarios = await obtenerUsuariosAsync();
 
-        intentos = 0;
+        let usuario = usuarios.find(u =>
+            u.email === email &&
+            u.password === password &&
+            u.role === rol
+        );
 
-        if (usuarioRegistrado.role === "profesor") {
-            window.location.href = obtenerRutaBase() + "profesor.html";
+        if (usuario) {
+            intentos = 0;
+            localStorage.setItem("usuarioActivo", JSON.stringify(usuario));
+            alert("Bienvenido " + usuario.nombre);
+            window.location.href = "index.html";
         } else {
-            window.location.href = obtenerRutaBase() + "estudiante.html";
+            intentos++;
+            alert("Datos incorrectos. Intento " + intentos + " de " + MAX_INTENTOS);
         }
-
-    } else {
-        intentos = intentos + 1;
-        alert("Datos incorrectos. Intento " + intentos + " de " + MAX_INTENTOS);
+    } catch (error) {
+        console.error(error);
+        alert("Error al cargar usuarios");
     }
 }
 
-// ===================== RUTA =====================
-function obtenerRutaBase() {
-    let ruta = window.location.pathname;
-
-    if (ruta.indexOf("/html/") !== -1) {
-        return "";
-    } else {
-        return "html/";
-    }
-}
-
-// ===================== SESIÓN =====================
 function cerrarSesion() {
-    localStorage.removeItem("usuarioRegistrado");
+    localStorage.removeItem("usuarioActivo");
     alert("Sesión cerrada");
-    window.location.href = obtenerRutaBase() + "inicioSesion.html";
+    window.location.href = "inicioSesion.html";
 }
 
-// ===================== DOM =====================
-
-// LOGIN
-let loginForm = document.getElementById("loginForm");
-
-if (loginForm) {
-    loginForm.onsubmit = function(e) {
-        e.preventDefault();
-
-        let email = document.getElementById("loginEmail").value;
-        let password = document.getElementById("loginPassword").value;
-        let role = document.getElementById("loginRole").value;
-
-        iniciarSesion(email, password, role);
-    };
+function obtenerUsuariosFetchThen() {
+    return fetch(RUTA_JSON).then(respuesta => {
+        if (!respuesta.ok) throw new Error("Error HTTP: " + respuesta.status);
+        return respuesta.json();
+    });
 }
 
-// REGISTER
-let registerForm = document.getElementById("registerForm");
-
-if (registerForm) {
-    registerForm.onsubmit = function(e) {
-        e.preventDefault();
-
-        let nombre = document.getElementById("regNombre").value;
-        let email = document.getElementById("regEmail").value;
-        let password = document.getElementById("regPassword").value;
-        let confirm = document.getElementById("regConfirm").value;
-        let role = document.getElementById("regRole").value;
-
-        let ok = registrarUsuario(nombre, email, password, confirm, role);
-
-        if (ok) {
-            window.location.href = obtenerRutaBase() + "inicioSesion.html";
-        }
-    };
+async function obtenerUsuariosAsync() {
+    let respuesta = await fetch(RUTA_JSON);
+    if (!respuesta.ok) throw new Error("Error HTTP: " + respuesta.status);
+    return await respuesta.json();
 }
 
-// BOTÓN LOGOUT
-let logoutBtn = document.getElementById("logoutBtn");
+function mostrarUsuarios(lista) {
+    let contenedor = document.getElementById("listaUsuarios");
+    if (!contenedor) return;
 
-if (logoutBtn) {
-    logoutBtn.onclick = function() {
-        cerrarSesion();
-    };
+    let html = "<div class='card'><h3>Usuarios del sistema</h3><ul>";
+
+    lista.forEach(u => {
+        html += `<li><strong>${u.nombre}</strong> — ${u.email} (${u.role})</li>`;
+    });
+
+    html += "</ul><p><strong>Total:</strong> " + lista.length + " usuarios</p></div>";
+    contenedor.innerHTML = html;
 }
