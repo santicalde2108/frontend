@@ -1,221 +1,163 @@
 const MAX_INTENTOS = 3;
 let intentos = 0;
-const RUTA_JSON = "usuarios.json";
+const RUTA_JSON = "/js/usuarios.json";
+const BLOQUEO_MS = 5 * 60 * 1000;
 
-/* ==========================
-   OBTENER USUARIOS
-========================== */
-async function obtenerUsuariosAsync() {
-    const respuesta = await fetch(RUTA_JSON);
-
-    if (!respuesta.ok) {
-        throw new Error("No se pudo cargar el archivo de usuarios");
-    }
-
-    return await respuesta.json();
-}
-
-/* ==========================
-   REGISTRAR USUARIO
-========================== */
 function registrarUsuario(nombre, email, password, confirmPassword, rol) {
-
-    if (!nombre || !email || !password || !confirmPassword || !rol) {
-        alert("Todos los campos son obligatorios");
-        return false;
-    }
-
     if (password !== confirmPassword) {
         alert("Las contraseñas no coinciden");
         return false;
     }
 
-    const usuarioExistente = JSON.parse(
-        localStorage.getItem("usuarioRegistrado")
-    );
+    let existe = JSON.parse(localStorage.getItem("usuarioRegistrado"));
 
-    if (usuarioExistente && usuarioExistente.email === email) {
+    if (existe && existe.email === email) {
         alert("Este correo ya está registrado");
         return false;
     }
 
-    const nuevoUsuario = {
-        nombre,
-        email,
-        password,
-        role: rol
-    };
-
     localStorage.setItem(
         "usuarioRegistrado",
-        JSON.stringify(nuevoUsuario)
+        JSON.stringify({ nombre, email, password, role: rol })
     );
 
-    alert("Registro exitoso");
+alert("Registro exitoso");
     return true;
 }
 
-/* ==========================
-   INICIAR SESIÓN
-========================== */
 async function iniciarSesion(email, password, rol) {
-
-    if (intentos >= MAX_INTENTOS) {
-        alert("Demasiados intentos. Usuario bloqueado.");
+    // bloqueo por email persistente en localStorage
+    const bloqueadoKey = `bloqueado_${email}`;
+    const intentosKey = `intentos_${email}`;
+    const bloqueadoUntil = parseInt(localStorage.getItem(bloqueadoKey) || '0', 10);
+    if (Date.now() < bloqueadoUntil) {
+        const segundos = Math.ceil((bloqueadoUntil - Date.now()) / 1000);
+        alert("Usuario bloqueado. Intenta de nuevo en " + segundos + " segundos.");
         return;
     }
 
     try {
+        let usuarios = await obtenerUsuariosAsync();
 
-        const usuarios = await obtenerUsuariosAsync();
-
-        const usuario = usuarios.find(
-            u =>
-                u.email === email &&
-                u.password === password &&
-                u.role === rol
+        let usuario = usuarios.find(u =>
+            u.email === email &&
+            u.password === password &&
+            u.role === rol
         );
 
         if (usuario) {
-
+            
+            localStorage.removeItem(intentosKey);
+            localStorage.removeItem(bloqueadoKey);
             intentos = 0;
-
-            localStorage.setItem(
-                "usuarioActivo",
-                JSON.stringify(usuario)
-            );
-
-            alert(`Bienvenido ${usuario.nombre}`);
-
-            if (usuario.role === "profesor") {
-                window.location.href = "profesor.html";
-            } else if (usuario.role === "estudiante") {
-                window.location.href = "estudiante.html";
+            localStorage.setItem("usuarioActivo", JSON.stringify(usuario));
+            alert("Bienvenido " + usuario.nombre);
+            if (usuario.role === "estudiante") {
+                window.location.href = "/html/estudiante.html";
+            } else if (usuario.role === "profesor") {
+                window.location.href = "/html/profesor.html";
             } else {
-                alert("Rol no válido");
+                window.location.href = "/index.html";
             }
-
         } else {
-
-            intentos++;
-
-            alert(
-                `Datos incorrectos. Intento ${intentos} de ${MAX_INTENTOS}`
-            );
-
+            let cont = parseInt(localStorage.getItem(intentosKey) || '0', 10) + 1;
+            localStorage.setItem(intentosKey, cont.toString());
+            if (cont >= MAX_INTENTOS) {
+                localStorage.setItem(bloqueadoKey, (Date.now() + BLOQUEO_MS).toString());
+                alert("Demasiados intentos. Usuario bloqueado por 5 minutos.");
+            } else {
+                alert("Datos incorrectos. Intento " + cont + " de " + MAX_INTENTOS);
+            }
         }
-
     } catch (error) {
-
-        console.error("Error:", error);
-        alert("Error al cargar los usuarios");
-
+        console.error(error);
+        alert("Error al cargar usuarios");
     }
 }
 
-/* ==========================
-   CERRAR SESIÓN
-========================== */
 function cerrarSesion() {
-
     localStorage.removeItem("usuarioActivo");
-
-    alert("Sesión cerrada correctamente");
-
-    window.location.href = "inicioSesion.html";
+    alert("Sesión cerrada");
+    window.location.href = "/html/inicioSesion.html";
 }
 
-/* ==========================
-   MOSTRAR USUARIOS
-========================== */
-function mostrarUsuarios(usuarios) {
-
-    const contenedor = document.getElementById("listaUsuarios");
-
-    if (!contenedor) return;
-
-    contenedor.innerHTML = "";
-
-    usuarios.forEach(usuario => {
-
-        contenedor.innerHTML += `
-            <tr>
-                <td>${usuario.nombre}</td>
-                <td>${usuario.email}</td>
-                <td>${usuario.role}</td>
-            </tr>
-        `;
-
+function obtenerUsuariosFetchThen() {
+    return fetch(RUTA_JSON).then(respuesta => {
+        if (!respuesta.ok) throw new Error("Error HTTP: " + respuesta.status);
+        return respuesta.json();
     });
 }
 
-/* ==========================
-   CARGAR USUARIOS
-========================== */
-async function iniciarCargaUsuarios() {
-
-    const contenedor = document.getElementById("listaUsuarios");
-
-    if (!contenedor) return;
-
-    try {
-
-        const usuarios = await obtenerUsuariosAsync();
-
-        mostrarUsuarios(usuarios);
-
-        localStorage.setItem(
-            "datosPlataforma",
-            JSON.stringify(usuarios)
-        );
-
-    } catch (error) {
-
-        console.error("Error al cargar usuarios:", error);
-
-    }
+async function obtenerUsuariosAsync() {
+    let respuesta = await fetch(RUTA_JSON);
+    if (!respuesta.ok) throw new Error("Error HTTP: " + respuesta.status);
+    return await respuesta.json();
 }
 
-/* ==========================
-   EVENTOS DEL DOM
-========================== */
-document.addEventListener("DOMContentLoaded", () => {
+function mostrarUsuarios(lista) {
+    let contenedor = document.getElementById("listaUsuarios");
+    if (!contenedor) return;
 
-    // Login
-    const loginForm = document.getElementById("loginForm");
+    let html = "<div class='card'><h3>Usuarios del sistema</h3><ul>";
+
+    lista.forEach(u => {
+        html += `<li><strong>${u.nombre}</strong> — ${u.email} (${u.role})</li>`;
+    });
+
+    html += "</ul><p><strong>Total:</strong> " + lista.length + " usuarios</p></div>";
+    contenedor.innerHTML = html;
+}
+async function iniciarCargaUsuarios() {
+    let contenedor = document.getElementById("listaUsuarios");
+    if (!contenedor) return;
+
+    contenedor.innerHTML = "<p>Cargando usuarios...</p>";
+     try {
+        let datos = await obtenerUsuariosAsync();
+        mostrarUsuarios(datos);
+        localStorage.setItem("datosPlataforma", JSON.stringify(datos));
+    }
+    catch (error) {
+        console.error(error);
+        contenedor.innerHTML = "<p style='color:red'>Error al cargar usuarios</p>";
+    }
+}
+document.addEventListener("DOMContentLoaded", function () {
+
+    let loginForm = document.getElementById("loginForm");
 
     if (loginForm) {
+        loginForm.onsubmit = async function (e) {
+            e.preventDefault();
+            await iniciarSesion(
+                document.getElementById("loginEmail").value,
+                document.getElementById("loginPassword").value,
+                document.getElementById("loginRole").value
+            );
+        };
+    }
+     let registerForm = document.getElementById("registerForm");
 
-        loginForm.addEventListener("submit", async (e) => {
-
+    if (registerForm) {
+        registerForm.onsubmit = function (e) {
             e.preventDefault();
 
-            const email = document.getElementById("loginEmail").value.trim();
-            const password = document.getElementById("loginPassword").value;
-            const rol = document.getElementById("loginRole").value;
-
-            await iniciarSesion(email, password, rol);
-
-        });
-
+            if (registrarUsuario(
+                document.getElementById("regNombre").value,
+                document.getElementById("regEmail").value,
+                document.getElementById("regPassword").value,
+                document.getElementById("regConfirm").value,
+                document.getElementById("regRole").value
+            )) {
+                window.location.href = "/html/inicioSesion.html";
+            }
+        };
     }
-
-    // Botón cerrar sesión
-    const logoutBtn = document.getElementById("logoutBtn");
+    let logoutBtn = document.getElementById("logoutBtn");
 
     if (logoutBtn) {
-
-        logoutBtn.addEventListener("click", (e) => {
-
-            e.preventDefault();
-
-            cerrarSesion();
-
-        });
-
+        logoutBtn.onclick = cerrarSesion;
     }
 
-    // Cargar usuarios si existe la tabla
     iniciarCargaUsuarios();
-
 });
