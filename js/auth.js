@@ -182,6 +182,10 @@ document.addEventListener("DOMContentLoaded", function () {
         logoutBtn.onclick = cerrarSesion;
     }
 
-    renderSaludoUsuario();
+    let panelPrivado = document.querySelector(".privado");
+    if (panelPrivado) {
+        renderSaludoUsuario();
+    }
+
     iniciarCargaUsuarios();
 });
