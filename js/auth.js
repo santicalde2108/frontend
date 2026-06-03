@@ -2,26 +2,29 @@ const MAX_INTENTOS = 3;
 let intentos = 0;
 const RUTA_JSON = "/js/usuarios.json";
 const BLOQUEO_MS = 5 * 60 * 1000;
+const STORAGE_USUARIOS = "usuarios";
+const STORAGE_USUARIO_ACTIVO = "usuarioActivo";
 
-function registrarUsuario(nombre, email, password, confirmPassword, rol) {
+async function registrarUsuario(nombre, email, password, confirmPassword, rol) {
     if (password !== confirmPassword) {
         alert("Las contraseñas no coinciden");
         return false;
     }
 
-    let existe = JSON.parse(localStorage.getItem("usuarioRegistrado"));
+    let usuarios = JSON.parse(localStorage.getItem(STORAGE_USUARIOS) || "null");
+    if (!usuarios) {
+        usuarios = await obtenerUsuariosAsync();
+    }
 
-    if (existe && existe.email === email) {
+    if (usuarios.some(u => u.email === email)) {
         alert("Este correo ya está registrado");
         return false;
     }
 
-    localStorage.setItem(
-        "usuarioRegistrado",
-        JSON.stringify({ nombre, email, password, role: rol })
-    );
+    usuarios.push({ nombre, email, password, role: rol });
+    localStorage.setItem(STORAGE_USUARIOS, JSON.stringify(usuarios));
 
-alert("Registro exitoso");
+    alert("Registro exitoso");
     return true;
 }
 
@@ -89,9 +92,87 @@ function obtenerUsuariosFetchThen() {
 }
 
 async function obtenerUsuariosAsync() {
+    let usuarios = JSON.parse(localStorage.getItem(STORAGE_USUARIOS) || "null");
+    if (usuarios) {
+        return usuarios;
+    }
+
     let respuesta = await fetch(RUTA_JSON);
     if (!respuesta.ok) throw new Error("Error HTTP: " + respuesta.status);
-    return await respuesta.json();
+    usuarios = await respuesta.json();
+    localStorage.setItem(STORAGE_USUARIOS, JSON.stringify(usuarios));
+    return usuarios;
+}
+
+function getUsuarioActivo() {
+    return JSON.parse(localStorage.getItem(STORAGE_USUARIO_ACTIVO) || "null");
+}
+
+function renderSaludoUsuario() {
+    const usuario = getUsuarioActivo();
+    const saludo = document.getElementById("saludoUsuario");
+    if (saludo && usuario) {
+        saludo.textContent = `Hola ${usuario.nombre}`;
+    }
+}
+
+function renderUsuarioPerfil() {
+    const usuario = getUsuarioActivo();
+    const perfil = document.getElementById("userProfileInfo");
+    if (perfil && usuario) {
+        perfil.innerHTML = `
+            <strong>Nombre:</strong> ${usuario.nombre}<br>
+            <strong>Correo:</strong> ${usuario.email}<br>
+            <strong>Rol:</strong> ${usuario.role}
+        `;
+    }
+}
+
+function guardarUsuariosLocalStorage(usuarios) {
+    localStorage.setItem(STORAGE_USUARIOS, JSON.stringify(usuarios));
+}
+
+function actualizarUsuarioActivo(nuevoNombre, nuevaPassword) {
+    const usuario = getUsuarioActivo();
+    if (!usuario) return false;
+
+    let usuarios = JSON.parse(localStorage.getItem(STORAGE_USUARIOS) || "[]");
+    usuarios = usuarios.map(u => {
+        if (u.email === usuario.email) {
+            return {
+                ...u,
+                nombre: nuevoNombre || u.nombre,
+                password: nuevaPassword || u.password
+            };
+        }
+        return u;
+    });
+
+    guardarUsuariosLocalStorage(usuarios);
+
+    const usuarioActualizado = { ...usuario, nombre: nuevoNombre || usuario.nombre };
+    if (nuevaPassword) {
+        usuarioActualizado.password = nuevaPassword;
+    }
+    localStorage.setItem(STORAGE_USUARIO_ACTIVO, JSON.stringify(usuarioActualizado));
+
+    renderSaludoUsuario();
+    renderUsuarioPerfil();
+    alert("Perfil actualizado con éxito.");
+    return true;
+}
+
+function eliminarUsuarioActivo() {
+    const usuario = getUsuarioActivo();
+    if (!usuario) return;
+
+    let usuarios = JSON.parse(localStorage.getItem(STORAGE_USUARIOS) || "[]");
+    usuarios = usuarios.filter(u => u.email !== usuario.email);
+    guardarUsuariosLocalStorage(usuarios);
+
+    localStorage.removeItem(STORAGE_USUARIO_ACTIVO);
+    alert("Cuenta eliminada. Serás redirigido al inicio de sesión.");
+    window.location.href = "/html/inicioSesion.html";
 }
 
 function mostrarUsuarios(lista) {
@@ -139,10 +220,10 @@ document.addEventListener("DOMContentLoaded", function () {
      let registerForm = document.getElementById("registerForm");
 
     if (registerForm) {
-        registerForm.onsubmit = function (e) {
+        registerForm.onsubmit = async function (e) {
             e.preventDefault();
 
-            if (registrarUsuario(
+            if (await registrarUsuario(
                 document.getElementById("regNombre").value,
                 document.getElementById("regEmail").value,
                 document.getElementById("regPassword").value,
@@ -159,5 +240,26 @@ document.addEventListener("DOMContentLoaded", function () {
         logoutBtn.onclick = cerrarSesion;
     }
 
+    let editProfileBtn = document.getElementById("editProfileBtn");
+    if (editProfileBtn) {
+        editProfileBtn.onclick = function () {
+            const nuevoNombre = prompt("Nuevo nombre:", getUsuarioActivo()?.nombre || "");
+            if (!nuevoNombre) return;
+            const nuevaPassword = prompt("Nueva contraseña (dejar vacío para mantener la actual):", "");
+            actualizarUsuarioActivo(nuevoNombre, nuevaPassword);
+        };
+    }
+
+    let deleteAccountBtn = document.getElementById("deleteAccountBtn");
+    if (deleteAccountBtn) {
+        deleteAccountBtn.onclick = function () {
+            if (confirm("¿Seguro que quieres eliminar tu cuenta? Esta acción no se puede deshacer.")) {
+                eliminarUsuarioActivo();
+            }
+        };
+    }
+
+    renderSaludoUsuario();
+    renderUsuarioPerfil();
     iniciarCargaUsuarios();
 });
