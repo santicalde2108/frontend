@@ -1,0 +1,6 @@
+[
+    { "nombre": "Jose Cardona",   "email": "jose.cardona@email.com",   "password": "1234", "role": "profesor" },
+    { "nombre": "Juan Montoya",  "email": "juan.montoya@email.com",  "password": "1234", "role": "estudiante" },
+    { "nombre": "Santiago Calderon", "email": "santiago.calderon@email.com", "password": "1234", "role": "estudiante" },
+    { "nombre": "Tatiana Suarez",  "email": "tatiana.suarez@email.com",  "password": "1234", "role": "estudiante" }
+]
