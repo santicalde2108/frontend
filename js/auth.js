@@ -3,6 +3,43 @@ const MAX_INTENTOS = 3;
 
 let intentos = 0;
 
+let usuarios = [];
+
+fetch("../json/usuarios.json")
+    .then(response => response.json())
+    .then(data => {
+        usuarios = data;
+
+        console.log("Usuarios cargados:", usuarios);
+
+        mostrarUsuarios();
+    })
+    .catch(error => {
+        console.error("Error al cargar usuarios:", error);
+    });
+
+function mostrarUsuarios() {
+
+    let lista = document.getElementById("listaUsuarios");
+
+    if (!lista) {
+        return;
+    }
+
+    lista.innerHTML = "";
+
+    usuarios.forEach(function(usuario) {
+
+        lista.innerHTML += `
+            <div>
+                <h4>${usuario.nombre}</h4>
+                <p>${usuario.email}</p>
+                <p>${usuario.role}</p>
+            </div>
+        `;
+
+    });
+}
 // ===================== REGISTRO =====================
 function registrarUsuario(nombre, email, password, confirmPassword, role) {
 
@@ -18,12 +55,12 @@ function registrarUsuario(nombre, email, password, confirmPassword, role) {
         return false;
     }
 
-localStorage.setItem("usuarioRegistrado", JSON.stringify({
-    nombre: nombre,
-    email: email,
-    password: password,
-    role: role
-}));
+    localStorage.setItem("usuarioRegistrado", JSON.stringify({
+        nombre: nombre,
+        email: email,
+        password: password,
+        role: role
+    }));
 
     alert("Registro exitoso");
     return true;
@@ -88,7 +125,7 @@ function cerrarSesion() {
 let loginForm = document.getElementById("loginForm");
 
 if (loginForm) {
-    loginForm.onsubmit = function (e) {
+    loginForm.onsubmit = function(e) {
         e.preventDefault();
 
         let email = document.getElementById("loginEmail").value;
@@ -103,7 +140,7 @@ if (loginForm) {
 let registerForm = document.getElementById("registerForm");
 
 if (registerForm) {
-    registerForm.onsubmit = function (e) {
+    registerForm.onsubmit = function(e) {
         e.preventDefault();
 
         let nombre = document.getElementById("regNombre").value;
@@ -124,7 +161,7 @@ if (registerForm) {
 let logoutBtn = document.getElementById("logoutBtn");
 
 if (logoutBtn) {
-    logoutBtn.onclick = function () {
+    logoutBtn.onclick = function() {
         cerrarSesion();
     };
 }
