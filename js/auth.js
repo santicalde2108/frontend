@@ -86,3 +86,57 @@ function mostrarUsuarios(lista) {
     html += "</ul><p><strong>Total:</strong> " + lista.length + " usuarios</p></div>";
     contenedor.innerHTML = html;
 }
+async function iniciarCargaUsuarios() {
+    let contenedor = document.getElementById("listaUsuarios");
+    if (!contenedor) return;
+
+    contenedor.innerHTML = "<p>Cargando usuarios...</p>";
+     try {
+        let datos = await obtenerUsuariosAsync();
+        mostrarUsuarios(datos);
+        localStorage.setItem("datosPlataforma", JSON.stringify(datos));
+    }
+    catch (error) {
+        console.error(error);
+        contenedor.innerHTML = "<p style='color:red'>Error al cargar usuarios</p>";
+    }
+}
+document.addEventListener("DOMContentLoaded", function () {
+
+    let loginForm = document.getElementById("loginForm");
+
+    if (loginForm) {
+        loginForm.onsubmit = async function (e) {
+            e.preventDefault();
+            await iniciarSesion(
+                document.getElementById("loginEmail").value,
+                document.getElementById("loginPassword").value,
+                document.getElementById("loginRole").value
+            );
+        };
+    }
+     let registerForm = document.getElementById("registerForm");
+
+    if (registerForm) {
+        registerForm.onsubmit = function (e) {
+            e.preventDefault();
+
+            if (registrarUsuario(
+                document.getElementById("regNombre").value,
+                document.getElementById("regEmail").value,
+                document.getElementById("regPassword").value,
+                document.getElementById("regConfirm").value,
+                document.getElementById("regRole").value
+            )) {
+                window.location.href = "inicioSesion.html";
+            }
+        };
+    }
+    let logoutBtn = document.getElementById("logoutBtn");
+
+    if (logoutBtn) {
+        logoutBtn.onclick = cerrarSesion;
+    }
+
+    iniciarCargaUsuarios();
+});
