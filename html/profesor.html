@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Profesor</title>
+    <link rel="icon" href="../imagenes/logo-transp.png" type="image/png" />
+    <link rel="stylesheet" href="../css/profesor.css">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+
+<body class="privado">
+
+    <!-- NAVBAR -->
+    <header class="main-header">
+        <nav class="navbar">
+            <div class="nav-left">
+                <a href="../index.html" class="nav-logo">
+                    <img src="../imagenes/logo-transp.png" class="logo">
+                </a>
+                <h1 class="site-title">ControlAssistant</h1>
+            </div>
+
+            <ul class="nav-right">
+                <li><a href="../index.html" class="nav-link">Inicio</a></li>
+                <li><a href="nosotros.html" class="nav-link">Nosotros</a></li>
+                <li><a href="contacto.html" class="nav-link">Contacto</a></li>
+                <li><a href="#" id="logoutBtn" class="nav-link">Cerrar sesión</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- HERO -->
+    <section class="hero">
+        <h2 id="saludoUsuario"></h2>
+        <p>Este es tu panel de profesor</p>
+    </section>
+
+    <!-- PANEL -->
+    <main class="features">
+
+        <div class="feature">
+            <i class="fa-solid fa-chart-line"></i>
+            <h3>Gestión de Notas</h3>
+            <p>Sube y edita calificaciones.</p>
+        </div>
+
+        <div class="feature">
+            <i class="fa-solid fa-user-graduate"></i>
+            <h3>Estudiantes</h3>
+            <p>Consulta tus grupos.</p>
+        </div>
+
+        <div class="feature">
+            <i class="fa-solid fa-book-open-reader"></i>
+            <h3>Actividades</h3>
+            <p>Crea tareas y evaluaciones.</p>
+        </div>
+
+    </main>
+
+    <section class="usuarios-json">
+        <h2>Datos de Usuarios (JSON)</h2>
+        <div id="listaUsuarios"> </div>
+    </section>
+
+    <script src="../js/auth.js"></script>
+</body>
+
+</html>
