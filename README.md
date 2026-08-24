@@ -37,7 +37,7 @@ ControlAssistant es un sistema web que permite a estudiantes y profesores accede
 
 1. **Clonar el repositorio:**
    ```bash
-   git clone https://github.com/CESDE-ControlAssistant/frontend.git
+   git clone https://github.com/santicalde2108/frontend.git
    ```
 
 2. **Abrir el proyecto:**
