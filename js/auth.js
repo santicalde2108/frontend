@@ -20,7 +20,7 @@ function registrarUsuario(nombre, email, password, confirmPassword, rol) {
         JSON.stringify({ nombre, email, password, role: rol })
     );
 
-alert("Registro exitoso");
+    alert("Registro exitoso");
     return true;
 }
 
@@ -91,22 +91,21 @@ async function iniciarCargaUsuarios() {
     if (!contenedor) return;
 
     contenedor.innerHTML = "<p>Cargando usuarios...</p>";
-     try {
+    try {
         let datos = await obtenerUsuariosAsync();
         mostrarUsuarios(datos);
         localStorage.setItem("datosPlataforma", JSON.stringify(datos));
-    }
-    catch (error) {
+    } catch (error) {
         console.error(error);
         contenedor.innerHTML = "<p style='color:red'>Error al cargar usuarios</p>";
     }
 }
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", function() {
 
     let loginForm = document.getElementById("loginForm");
 
     if (loginForm) {
-        loginForm.onsubmit = async function (e) {
+        loginForm.onsubmit = async function(e) {
             e.preventDefault();
             await iniciarSesion(
                 document.getElementById("loginEmail").value,
@@ -115,19 +114,19 @@ document.addEventListener("DOMContentLoaded", function () {
             );
         };
     }
-     let registerForm = document.getElementById("registerForm");
+    let registerForm = document.getElementById("registerForm");
 
     if (registerForm) {
-        registerForm.onsubmit = function (e) {
+        registerForm.onsubmit = function(e) {
             e.preventDefault();
 
             if (registrarUsuario(
-                document.getElementById("regNombre").value,
-                document.getElementById("regEmail").value,
-                document.getElementById("regPassword").value,
-                document.getElementById("regConfirm").value,
-                document.getElementById("regRole").value
-            )) {
+                    document.getElementById("regNombre").value,
+                    document.getElementById("regEmail").value,
+                    document.getElementById("regPassword").value,
+                    document.getElementById("regConfirm").value,
+                    document.getElementById("regRole").value
+                )) {
                 window.location.href = "inicioSesion.html";
             }
         };
@@ -138,5 +137,5 @@ document.addEventListener("DOMContentLoaded", function () {
         logoutBtn.onclick = cerrarSesion;
     }
 
-    iniciarCargaUsuarios();
+    iniciarCargaUsuarios()
 });
