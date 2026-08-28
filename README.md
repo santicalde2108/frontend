@@ -26,6 +26,66 @@ ControlAssistant es un sistema web que permite a estudiantes y profesores accede
 
 ---
 
+
+## Estrategia de Ramas (GitFlow)
+
+El proyecto sigue una estrategia basada en GitFlow con la siguiente estructura:
+
+main
+└── develop
+├── feature/login
+├── feature/registro
+├── feature/panel-estudiante
+└── feature/panel-profesor
+
+
+- **`main`** → Rama de producción. Contiene únicamente código estable y probado.
+- **`develop`** → Rama principal de desarrollo. Integra las funcionalidades terminadas antes de pasar a `main`.
+- **`feature/nombre-funcionalidad`** → Ramas para desarrollar una funcionalidad específica. Se crean a partir de `develop` y se fusionan de vuelta a `develop` cuando la funcionalidad está completa.
+
+> Nota: en esta primera fase no se implementan ramas `release` ni `hotfix`, ya que corresponden a etapas posteriores del proyecto.
+
+---
+
+## Convención de Commits
+
+
+
+| Prefijo | Uso |
+|---|---|
+| `feat:` | Nueva funcionalidad |
+| `fix:` | Corrección de errores |
+| `docs:` | Cambios en documentación |
+| `style:` | Cambios de formato (espacios, indentación, sin afectar lógica) |
+| `refactor:` | Refactorización de código sin cambiar funcionalidad |
+| `test:` | Agregar o modificar pruebas |
+| `chore:` | Tareas de mantenimiento (configuración, dependencias, etc.) |
+
+**Ejemplo:** `feat: agregar validación de contraseña en registro`
+
+---
+
+## Reglas para Pull Requests
+
+- Toda funcionalidad debe desarrollarse en su propia rama `feature/...` y no directamente en `develop` o `main`.
+- Al finalizar una funcionalidad, se debe abrir un **Pull Request** hacia `develop`, describiendo brevemente qué se hizo y qué issue o tarea resuelve.
+- Cada Pull Request debe ser **revisado por al menos un integrante** distinto de quien lo creó, antes de fusionarse.
+- No se permite fusionar un PR con errores conocidos o sin revisión.
+
+---
+
+## Reglas de Fusión (Merge)
+
+- Las fusiones hacia `develop` se realizan únicamente mediante Pull Request, nunca con `push` directo.
+- Se utiliza **merge normal** (no squash) para conservar el historial de commits de cada funcionalidad.
+- La fusión de `develop` hacia `main` solo se realiza cuando el equipo confirma que la versión está estable.
+- En caso de conflictos, el responsable de la rama `feature` debe resolverlos antes de solicitar la revisión del PR.
+
+---
+
+
+
+
 ## Cómo Usar el Proyecto
 
 ### Requisitos
